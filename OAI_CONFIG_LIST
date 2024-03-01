@@ -1,0 +1,12 @@
+[
+    {
+        "model": "gpt-4-1106-preview",
+        "api_key": "sk-hJHCxFNrXm03IcfM68381818D36c4361B84eA0806fF902B0",
+        "base_url": "https://api.kwwai.top/v1"
+    },
+    {
+        "model": "gpt-3.5-turbo",
+        "api_key": "sk-cmj9jtBJQCH5So723796Be44AdE14aCaB80f43Eb83018485",
+        "base_url": "https://d1.xiamoai.top/v1"
+    }
+]
