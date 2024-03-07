@@ -23,6 +23,20 @@ class CoorRetrieveGoodsAgent(AssistantAgent):
         # self.analyzer = TextAnalyzerAgent(llm_config=llm_config)
         self.register_reply(Agent, CoorRetrieveGoodsAgent._generate_retrieve_goods_reply)
         self.retrieve_config = retrieve_config
+        self.ragproxyagent = RetrieveUserProxyAgent(
+            name="inner_rag_proxy_user",
+            human_input_mode="NEVER",
+            max_consecutive_auto_reply=10,
+            retrieve_config=self.retrieve_config,
+            code_execution_config=False,
+            is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
+        )
+        self.assistant = RetrieveAssistantAgent(
+            name="inner_rag_proxy_assistant",
+            system_message="You are a helpful assistant as a security tester. You must add the 'TERMINATE' after the code block.",
+            # is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
+            llm_config=self.llm_config,
+        )
 
     def _generate_retrieve_goods_reply(
             self,
@@ -35,26 +49,14 @@ class CoorRetrieveGoodsAgent(AssistantAgent):
         if messages is None:
             messages = self._oai_messages[sender]
         message = messages[-1]
-        ragproxyagent = RetrieveUserProxyAgent(
-            name="inner_rag_proxy_user",
-            human_input_mode="NEVER",
-            max_consecutive_auto_reply=10,
-            retrieve_config=self.retrieve_config,
-            code_execution_config=False,
-            is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
-        )
-        assistant = RetrieveAssistantAgent(
-            name="inner_rag_proxy_assistant",
-            system_message="You are a helpful assistant. You must add the 'TERMINATE' after the code block.",
-            is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
-            llm_config=self.llm_config,
-        )
-        ragproxyagent.initiate_chat(
-            assistant,
+
+        self.ragproxyagent.initiate_chat(
+            self.assistant,
             problem=message['content'],
             n_results=1
         )
-        if assistant.last_message()["content"] == "TERMINATE":
+
+        if self.assistant.last_message()["content"] == "TERMINATE":
             return True, "没有找到相关信息。"
         else:
-            return True, assistant.last_message()["content"]
+            return True, self.assistant.last_message()["content"]

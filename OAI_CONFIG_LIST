@@ -1,7 +1,7 @@
 [
     {
         "model": "gpt-4-1106-preview",
-        "api_key": "sk-hJHCxFNrXm03IcfM68381818D36c4361B84eA0806fF902B0",
+        "api_key": "sk-itUIKUlHKRBYopUzD2Df6fC6Db4d4f7f9163F89c6b8455E3",
         "base_url": "https://api.kwwai.top/v1"
     },
     {
