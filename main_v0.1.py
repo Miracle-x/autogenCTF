@@ -1,11 +1,11 @@
 import chromadb
+
 import autogen.autogen as autogen
 from autogen.autogen.agentchat.contrib.web_surfer import WebSurferAgent
 from coor_retrieve_agent import CoorRetrieveGoodsAgent
 from tool_sqlmap import SqlmapAgent
 
-
-cache_seed = 31
+cache_seed = 32
 model_name = "gpt-4-turbo-preview"
 llm_config = {
     "timeout": 600,

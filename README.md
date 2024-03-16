@@ -9,3 +9,11 @@ git clone -b nestedchat-dev https://github.com/microsoft/autogen.git
 pip install -e .
 ```
 
+sqlmap + code group + planner : 
+- main.py
+- cache seed 31
+
+code group:
+- main_v4.py
+- cache seed 40
+

@@ -20,7 +20,7 @@ class CoorRetrieveGoodsAgent(AssistantAgent):
             **kwargs
         )
 
-        # self.analyzer = TextAnalyzerAgent(llm_config=llm_config)
+        self.analyzer = TextAnalyzerAgent(llm_config=llm_config)
         self.register_reply(Agent, CoorRetrieveGoodsAgent._generate_retrieve_goods_reply)
         self.retrieve_config = retrieve_config
         self.ragproxyagent = RetrieveUserProxyAgent(
@@ -33,7 +33,7 @@ class CoorRetrieveGoodsAgent(AssistantAgent):
         )
         self.assistant = RetrieveAssistantAgent(
             name="inner_rag_proxy_assistant",
-            system_message="You are a helpful assistant as a security tester. You must add the 'TERMINATE' after the answer. You must add the 'TERMINATE' after the answer.",
+            system_message="You are a helpful assistant as a security tester. If you answer the question, add the 'TERMINATE' after the answer.",
             # is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
             llm_config=self.llm_config,
         )
@@ -49,11 +49,13 @@ class CoorRetrieveGoodsAgent(AssistantAgent):
         if messages is None:
             messages = self._oai_messages[sender]
         message = messages[-1]
-
+        url = self.analyzer.analyze_text(message.get('content'), "Extract the test_target_url without quotation mark").replace('TERMINATE', '').strip()
+        print('aaaaaaaaaaa'+url+'aaaaaaaaa')
         self.ragproxyagent.initiate_chat(
             self.assistant,
             problem=message['content'],
-            n_results=1
+            n_results=1,
+            search_string=url
         )
 
         if self.assistant.last_message()["content"] == "TERMINATE":
