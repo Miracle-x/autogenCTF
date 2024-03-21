@@ -5,8 +5,8 @@ requirement文件不完整，缺啥自己装一下
 autogen库执行以下代码安装
 
 ```
-git clone -b nestedchat-dev https://github.com/microsoft/autogen.git
-pip install -e autogen
+git clone -b nestedchat-dev --depth=1 https://github.com/microsoft/autogen.git ./package_source/autogen
+pip install -e ./package_source/autogen
 ```
 
 sqlmap + code group + planner : 

@@ -60,7 +60,7 @@ def parent_process(input_queues, output_queues):
 
 
 if __name__ == '__main__':
-    target_url = ['http://43.136.237.143:40032/', 'http://43.136.237.143:40012/']
+    target_url = ['http://43.136.237.143:40032/']
     # 创建进程池
     pool = multiprocessing.Pool(processes=2)
     for process_id, target_url in enumerate(target_url):

@@ -49,7 +49,7 @@ class CoorRetrieveGoodsAgent(AssistantAgent):
         if messages is None:
             messages = self._oai_messages[sender]
         message = messages[-1]
-        url = self.analyzer.analyze_text(message.get('content'), "Extract the test_target_url without quotation mark").replace('TERMINATE', '').strip()
+        url = self.analyzer.analyze_text(message.get('content'), "Extract the test_target_url without quotation mark. return as short as possible").replace('TERMINATE', '').strip()
         print('aaaaaaaaaaa'+url+'aaaaaaaaa')
         self.ragproxyagent.initiate_chat(
             self.assistant,
