@@ -23,5 +23,5 @@ def default_action_fun(url, flag=''):
     finally:
         client_socket.close()
 
-res = default_action_fun('http://43.136.237.143:40030/Less-6/', '10.2.26-MariaDB-log')
+res = default_action_fun('http://43.136.237.143:40030/Less-5/', '10.2.26-MariaDB-log')
 print(res)

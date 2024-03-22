@@ -27,18 +27,21 @@ def default_eval_fun(msg):
         return False, None
 
 
-def default_action_fun(url, flag=''):
+def default_action_fun(url, socket_port=40050, action_port=None, flag=''):
     parsed_url = urlparse(url)
-    host = parsed_url.hostname
-    port = 40050
-    message = str(parsed_url.port) + ', ' + flag
+    socket_host = parsed_url.hostname
+    if not action_port:
+        action_port = str(parsed_url.port)
+    else:
+        action_port = str(action_port)
+    message = action_port + ', ' + flag
 
     # 创建套接字
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:
         # 连接到服务器
-        client_socket.connect((host, port))
+        client_socket.connect((socket_host, socket_port))
         # 发送消息
         client_socket.sendall(message.encode())
         # 接收响应
@@ -56,6 +59,7 @@ def test(
         model_name: str = "gpt-4-1106-preview",
         eval_fun: Callable = default_eval_fun,
         action_fun: Callable = default_action_fun,
+        action_port: Optional[Union[str, int]] = None
 ):
     """传入待测试url，tasks可使用默认任务"""
     if not tasks:
@@ -245,7 +249,7 @@ def test(
         last_msg = sender.assistant.last_message()["content"]
         eval_flag, eval_res = eval_fun(last_msg)
         if eval_flag:
-            action_res = action_fun(url, eval_res)
+            action_res = action_fun(url, action_port=action_port, flag=eval_res)
             print(action_res)
         else:
             print(colored(last_msg, "yellow"))
