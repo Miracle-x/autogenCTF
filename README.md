@@ -6,7 +6,7 @@ autogen库执行以下代码安装
 
 ```
 git clone -b nestedchat-dev --depth=1 https://github.com/microsoft/autogen.git ./package_source/autogen
-pip install -e ./package_source/autogen
+pip install ./package_source/autogen
 ```
 
 sqlmap + code group + planner : 

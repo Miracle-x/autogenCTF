@@ -1,12 +1,8 @@
 import chromadb
 
-import autogen.autogen as autogen
-from autogen.autogen import AssistantAgent, Agent, ConversableAgent, UserProxyAgent
+import autogen
+from autogen import AssistantAgent, Agent, ConversableAgent, UserProxyAgent
 from typing import Dict, Optional, Union, List, Tuple, Any, Literal
-
-from autogen.autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistantAgent
-from autogen.autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
-from autogen.autogen.agentchat.contrib.text_analyzer_agent import TextAnalyzerAgent
 
 
 class SqlmapAgent(ConversableAgent):
@@ -45,26 +41,8 @@ class SqlmapAgent(ConversableAgent):
             llm_config=llm_config,
             **kwargs
         )
-        # retrieve_config = {
-        #     "task": "code",
-        #     "chunk_token_size": 1000,
-        #     "docs_path": "./sqlmap_usage.md",
-        #     "model": llm_config["config_list"][0]["model"],
-        #     "client": chromadb.PersistentClient(path="/tmp/chromadb"),
-        #     "collection_name": "tool_sqlmap1",
-        #     "get_or_create": True
-        # }
         # self.analyzer = TextAnalyzerAgent(llm_config=llm_config)
         self.register_reply(Agent, SqlmapAgent._generate_sqlmap_reply)
-        # self.ragproxyagent = RetrieveUserProxyAgent(
-        #     name=name + "_inner_rag",
-        #     human_input_mode="NEVER",
-        #     max_consecutive_auto_reply=10,
-        #     retrieve_config=retrieve_config,
-        #     code_execution_config=False,
-        #     is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
-        #     description="Assistant who has extra content retrieval power for solving difficult problems.",
-        # )
         self.assistant = AssistantAgent(
             name=name + "_inner_assistant",
             system_message=system_message,  # type: ignorearg-type]
